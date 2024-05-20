@@ -1,0 +1,32 @@
+import discord
+from discord.ext import commands
+
+
+intents = discord.Intents.default()
+intents.members = True
+intents.message_content = True
+
+bot = commands.Bot(command_prefix='?', intents=intents)
+
+# Çöp kutuları için gerekli renkleri belirleyin
+trash_bins = {
+    "mavi": ["plastik"],
+    "sarı": ["metal"],
+    "kırmızı": ["elektronik"]
+}
+
+@bot.event
+async def on_ready():
+    print(f'{bot.user} olarak giriş yaptım!')
+
+@bot.command()
+async def at(ctx, *, item):
+    # Eşleşen çöp kutusunu bulmak için item'i kontrol edin
+    for color, items in trash_bins.items():
+        if item in items:
+            await ctx.send(f'{item} {color} çöp kutusuna atıldı!')
+            return
+    await ctx.send(f'{item} için uygun çöp kutusu bulunamadı.')
+
+# Discord Bot token'ınızı buraya yapıştırın
+bot.run("token")
